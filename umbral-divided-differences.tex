@@ -1,0 +1,900 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Question}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\fS}{\mathfrak{S}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\NH}{\mathcal{NH}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\DAHA}{\ddot{\cH}}
+
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Comp}{Comp}
+\DeclareMathOperator{\Fl}{Fl}
+
+\title{The umbral calculus with divided differences}
+\author{Robin Langer}
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+We trace the analogy between the classical umbral calculus of Rota,
+its lift to the ring of symmetric functions $\Lambda$ via coalgebra
+morphisms and the Hall inner product (as developed in the author's
+masters thesis), and a prospective ``divided difference umbral
+calculus'' on the polynomial ring $\Z[x_1,\dots,x_n]$. The column
+operator construction survives: Demazure operators play the role of
+generalized column operators, and key polynomials play the role of
+Littlewood--Richardson type bases. However, the parametric freedom
+collapses from an infinite-dimensional function space (delta series
+under composition) to the Macdonald parameters~$(q,t)$, due to
+the nilpotency and noncommutativity of divided differences. The
+Hecke algebra, the double affine Hecke algebra, and the Cherednik
+operators play the roles of the delta series, the umbral operators,
+and the column operators respectively.
+\end{abstract}
+
+\maketitle
+
+\tableofcontents
+
+% ------------------------------------------------------------------
+\section{Introduction}
+% ------------------------------------------------------------------
+
+The umbral calculus of Gian-Carlo Rota \cite{Rota,Roman} classifies
+the coalgebra automorphisms of the polynomial ring $\Q[x]$ by
+consideration of the algebra morphisms of the dual space
+$\Q[[y]]$. Every such automorphism is determined by an invertible
+formal power series $f(z)$ (a \emph{delta series}), and gives rise
+to a \emph{sequence of binomial type}: a basis $\{p_n(x)\}$ for
+$\Q[x]$ satisfying
+\[
+  p_n(x + x') = \sum_{k=0}^{n} \binom{n}{k} p_k(x)\, p_{n-k}(x').
+\]
+
+In \cite{Langer}, the author lifted this machinery from $\Q[x]$ to
+the ring of symmetric functions $\Lambda$, using the coalgebra
+embedding $x^n/n! \mapsto h_n(X)$ and the Hall inner product. The
+result was a classification of all \emph{Littlewood--Richardson type
+bases} $\{P_\lambda(X)\}$ of $\Lambda$: bases satisfying
+\[
+  P_\lambda(X + X') = \sum_{\mu,\nu} c^\lambda_{\mu\nu}\, P_\mu(X)\, P_\nu(X')
+\]
+with the same structure constants $c^\lambda_{\mu\nu}$ as the Schur
+functions.
+
+A natural question arises: what happens if we replace the
+differential operator $\cD = d/dx$ not with the adjoint operators
+$\partial_{h_n}$ on $\Lambda$, but with the \emph{divided difference
+operators} $\partial_i$ on the polynomial ring
+$\Z[x_1,\dots,x_n]$? This note traces the analogy, identifies what
+survives, what breaks, and what replaces the broken parts.
+
+% ------------------------------------------------------------------
+\section{Three levels of the umbral calculus}
+% ------------------------------------------------------------------
+
+% ------------------------------------------------------------------
+\subsection{Level 1: The classical setting}\label{sec:classical}
+% ------------------------------------------------------------------
+
+The polynomial ring $V = \Q[x]$ has a distinguished Hamel basis
+$\{1, x, x^2/2!, x^3/3!, \dots\}$ and a coalgebra structure given
+by:
+\[
+  \Delta\, p(x) = p(x + x').
+\]
+The dual space $V^* = \Q[[y]]$ has basis $\{1, y, y^2, \dots\}$,
+and the pairing between $V^*$ and $V$ is:
+\[
+  (y^k, p(x)) = \left[\frac{x^k}{k!}\right] p(x) = \cL \cD^k\, p(x)
+\]
+where $\cD = d/dx$ is the differential operator and $\cL$ is the
+constant term operator.
+
+A \emph{delta series} is a formal power series $f(y) \in \Q[[y]]$
+with $f(0) = 0$ and $f'(0) \neq 0$, i.e., one which has a
+compositional inverse $g(y)$ satisfying $f(g(y)) = g(f(y)) = y$.
+
+\begin{proposition}[{\cite[Prop.~1.2]{Langer}}]
+  For every delta series $f(y)$ with compositional inverse $g(y)$,
+  the \emph{umbral operator}
+  \[
+    U_f = \sum_n \frac{x^n}{n!}\, \cL\, f^n(\cD)
+  \]
+  is the unique operator on $\Q[x]$ satisfying:
+  \begin{enumerate}
+    \item $\cD \circ U_f = U_f \circ g(\cD)$,
+    \item $\cL \circ U_f = \cL$.
+  \end{enumerate}
+\end{proposition}
+
+The group of delta series under composition --- the
+\emph{Jabotinsky group} (or Riordan group) --- is
+infinite-dimensional. This is the source of the parametric freedom
+in the classical umbral calculus: there are infinitely many
+sequences of binomial type, one for each delta series.
+
+% ------------------------------------------------------------------
+\subsection{Level 2: Symmetric functions}\label{sec:symmetric}
+% ------------------------------------------------------------------
+
+The coalgebra embedding
+\[
+  \frac{x^n}{n!} \mapsto h_n(X)
+\]
+lifts the coproduct from $\Q[x]$ to $\Lambda$, where
+$\Delta\, f(X) = f(X + X')$ is given by plethystic addition of
+alphabets. The Hall inner product
+\[
+  \langle m_\lambda(Y), h_\mu(X) \rangle = \delta_{\lambda\mu}
+\]
+replaces the pairing $(y^k, p(x)) = \cL \cD^k p(x)$. The role of
+the differential operator $\cD$ is played by the adjoint operators
+$\partial_{h_n}$, defined by:
+\[
+  \langle \partial_f[g(Y)], h(X) \rangle
+  = \langle g(Y),\, f(X)\, h(X) \rangle.
+\]
+
+The \emph{translation operator}
+\[
+  \cT(z)[f(X)] = f(X + z) = \sum_n z^n\, \partial_{h_n}
+\]
+and the \emph{multiplication operator}
+\[
+  \cP(z)[f(X)] = \Omega(Xz)\, f(X) = \sum_n z^n\, h_n(X) \cdot f(X)
+\]
+combine to form the \emph{column operator}:
+\[
+  C(z) = \cP(-z)\, \cT(1/z).
+\]
+
+\begin{proposition}[{\cite[Prop.~1.4]{Langer}}]
+  The Schur function has the column operator expression:
+  \[
+    s_\lambda(X) = C_{\lambda'_1} \circ C_{\lambda'_2} \circ \cdots
+    \circ C_{\lambda'_m}[1].
+  \]
+\end{proposition}
+
+The umbral operator on $\Lambda$ is defined by
+$U_f[\Omega(Xz)] = \Omega_f(Xz) = \prod_x 1/(1 - f(z)x)$, extended
+multiplicatively. The generalized column operator is:
+\[
+  C_f(z) = U_f \circ C(z) \circ U_g
+\]
+and the resulting bases
+\[
+  P_\lambda(X) = C^f_{\lambda'_1} \circ C^f_{\lambda'_2} \circ
+  \cdots \circ C^f_{\lambda'_m}[1] = U_f[s_\lambda(X)]
+  = \det(r_{\lambda_i + j - i}(X))
+\]
+are of Littlewood--Richardson type, with dual bases
+$Q_\lambda(Y) = U_g^*[s_\lambda(Y)]$ satisfying:
+\[
+  \sum_\lambda P_\lambda(X)\, Q_\lambda(Y) = \Omega(XY)
+  = \prod_{\substack{x \in X \\ y \in Y}} \frac{1}{1 - xy}.
+\]
+
+The parametric freedom is the same as in the classical case: every
+delta series $f(y)$ gives a Littlewood--Richardson type basis.
+
+% ------------------------------------------------------------------
+\subsection{Level 3: Divided differences}\label{sec:divided}
+% ------------------------------------------------------------------
+
+Now consider the polynomial ring $\Z[x_1, \dots, x_n]$ with the
+\emph{divided difference operators}:
+\[
+  \partial_i(f) = \frac{f - s_i(f)}{x_i - x_{i+1}},
+  \qquad i = 1, \dots, n-1
+\]
+where $s_i$ is the simple transposition swapping $x_i$ and
+$x_{i+1}$. These generate the \emph{nil-Coxeter algebra} $\cN_n$
+with relations:
+\begin{align}
+  \partial_i^2 &= 0, \label{eq:nilpotent} \\
+  \partial_i \partial_j &= \partial_j \partial_i
+  \quad \text{for } |i - j| \geq 2, \\
+  \partial_i \partial_{i+1} \partial_i &= \partial_{i+1} \partial_i
+  \partial_{i+1} \quad \text{(braid relation)}.
+\end{align}
+
+The \emph{Demazure operators} (isobaric divided differences) are:
+\[
+  \pi_i(f) = \partial_i(x_i\, f)
+  = \frac{x_i\, f - x_{i+1}\, s_i(f)}{x_i - x_{i+1}}.
+\]
+These satisfy $\pi_i^2 = \pi_i$ (idempotence) and the same braid
+relations as the $\partial_i$.
+
+% ------------------------------------------------------------------
+\section{The dictionary}
+% ------------------------------------------------------------------
+
+The following table records the analogy across the three levels.
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\raggedright}p{3.2cm} >{\raggedright}p{4cm}
+  >{\raggedright\arraybackslash}p{4.8cm}}
+\toprule
+\textbf{Classical} $\Q[x]$ &
+\textbf{Symmetric} $\Lambda$ &
+\textbf{Divided difference} $\Z[x_1,\dots,x_n]$ \\
+\midrule
+$\cD = d/dx$ &
+$\partial_{h_n}$ &
+$\partial_i = (f - s_i f)/(x_i - x_{i+1})$ \\[4pt]
+$\cD^n$ &
+$\partial_{h_\lambda}$ &
+$\partial_w = \partial_{i_1} \cdots \partial_{i_k}$ (BGG) \\[4pt]
+$x^n / n!$ &
+$h_n(X)$ &
+$\mathfrak{S}_w(x)$ (Schubert polynomials) \\[4pt]
+$\cL \cD^k$ extracts $[x^k/k!]$ &
+$\langle m_\lambda(Y), -\rangle$ &
+$\partial_{w_0}$ as top extraction \\[4pt]
+$\Delta p = p(x + x')$ &
+$\Delta f = f(X + X')$ &
+no clean analogue (\S\ref{sec:coproduct}) \\[4pt]
+$\cT = \sum x^n/n!\; \cL \cD^n$ (Taylor) &
+$\cT(z) = \sum z^n \partial_{h_n}$ &
+$f = \sum_w \partial_w(f)|_0 \cdot \mathfrak{S}_w$ \\[4pt]
+$\cP(z) = e^{xz} \times$ &
+$\cP(z) = \Omega(Xz) \times$ &
+--- \\[4pt]
+$C(z) = \cP(-z)\cT(1/z)$ &
+same &
+$\pi_i = x_i \partial_i$ (Demazure) \\[4pt]
+$p_n = U_f[x^n/n!]$ &
+$P_\lambda = U_f[s_\lambda]$ &
+$\kappa_\alpha = \pi_{i_1} \cdots \pi_{i_k}[x^\lambda]$ \\[4pt]
+$\Q[\cD]$ (commutative) &
+same &
+$\cN_n$ (nil-Coxeter, dim $= n!$) \\[4pt]
+Delta series $f(y)$ &
+same &
+Hecke parameter $q$ \\[4pt]
+Jabotinsky group ($\infty$-dim) &
+same &
+$\mathrm{Aut}(\cN_n)$ (finite) \\[4pt]
+$\Omega(XY) = \sum s_\lambda s_\lambda$ &
+same &
+$\prod_{i+j \leq n+1}(x_i + y_j) = \sum \mathfrak{S}_w \mathfrak{S}_{w_0 w}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ------------------------------------------------------------------
+\section{What survives: the column operator construction}
+% ------------------------------------------------------------------
+
+The column operator construction is the part of the umbral calculus
+that transfers most cleanly to divided differences.
+
+\subsection{Column operators and Demazure operators}
+
+In \S\ref{sec:symmetric}, the column operator $C(z) = \cP(-z)\cT(1/z)$
+combines multiplication by a generating function with translation.
+The Demazure operator $\pi_i = x_i \partial_i$ has exactly this
+structure: it is multiplication by $x_i$ followed by the divided
+difference $\partial_i$.
+
+The Schur function is built by iterated column operators:
+\[
+  s_\lambda(X) = C_{\lambda'_1} \circ C_{\lambda'_2} \circ \cdots
+  \circ C_{\lambda'_m}[1].
+\]
+The key polynomial is built by iterated Demazure operators:
+\[
+  \kappa_\alpha = \pi_{i_1} \circ \pi_{i_2} \circ \cdots \circ
+  \pi_{i_k}[x^\lambda]
+\]
+where $s_{i_1} \cdots s_{i_k}$ is a reduced decomposition and
+$\lambda$ is the partition obtained by sorting $\alpha$.
+
+\subsection{Generalized column operators}
+
+In the symmetric function setting, the generalized column operator
+$C_f(z) = U_f \circ C(z) \circ U_g$ is conjugation of the Schur
+column operator by the umbral operators. The resulting bases
+$P_\lambda = C^f_{\lambda'_1} \circ \cdots \circ C^f_{\lambda'_m}[1]$
+are of Littlewood--Richardson type.
+
+The divided difference analogue of this conjugation replaces $\pi_i$
+with a \emph{deformed Demazure operator}. The natural deformation
+is provided by the \textbf{Hecke algebra} $\cH_n(t)$, which
+replaces $s_i^2 = 1$ with:
+\begin{equation}\label{eq:hecke}
+  T_i^2 = (t - 1)\, T_i + t.
+\end{equation}
+The Hecke generator acts on the polynomial ring via the
+\emph{Demazure--Lusztig operator}:
+\begin{equation}\label{eq:DL}
+  T_i = (t - 1)\, \pi_i + s_i.
+\end{equation}
+One may verify \eqref{eq:hecke} directly using $\pi_i^2 = \pi_i$,
+$s_i^2 = \id$, $s_i \pi_i = \pi_i$, and
+$\pi_i s_i = \id + s_i - \pi_i$:
+\begin{align*}
+  T_i^2 &= (t-1)^2 \pi_i + (t-1)(\pi_i s_i + s_i \pi_i) + \id \\
+  &= (t-1)^2 \pi_i + (t-1)(\id + s_i) + \id \\
+  &= (t-1)^2 \pi_i + (t-1) s_i + t \\
+  &= (t-1) T_i + t. \qquad \checkmark
+\end{align*}
+
+The formula \eqref{eq:DL} makes the role of the parameter $t$
+transparent: it controls the mixture of the Demazure projection
+$\pi_i$ and the reflection $s_i$.
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lll}
+\toprule
+\textbf{Parameter} & \textbf{Operator} & \textbf{Polynomials} \\
+\midrule
+$t = 1$ & $T_i = s_i$ (reflection) &
+  Schur / symmetric functions \\
+$t = 0$ & $T_i = s_i - \pi_i$ (0-Hecke) &
+  key polynomials / atoms \\
+$t = -1$ & $T_i = -2\pi_i + s_i$ &
+  --- \\
+general $t$ & $T_i = (t-1)\pi_i + s_i$ &
+  Hall--Littlewood / Macdonald \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}\label{rmk:0hecke}
+  At $t = 0$, the relation becomes $T_i^2 = -T_i$, so $T_i + 1$
+  is idempotent: $(T_i + 1)^2 = T_i + 1$. This is the
+  \textbf{0-Hecke algebra}, which is the algebra of Demazure
+  operators. Note that the \emph{nil-Coxeter algebra}
+  ($\partial_i^2 = 0$) is a \emph{different} quotient of the braid
+  group algebra --- it is \textbf{not} a specialization of the Hecke
+  algebra at any value of $t$. The divided difference $\partial_i$
+  requires both $s_i$ and the polynomial ring for its definition:
+  $\partial_i = (1 - s_i)/(x_i - x_{i+1})$. It is an element of
+  the \emph{degenerate affine Hecke algebra}, not the finite Hecke
+  algebra.
+\end{remark}
+
+\subsection{Anti-Demazure operators and atoms}
+
+The anti-Demazure operator
+\[
+  \bar{\pi}_i = \pi_i - \id
+\]
+satisfies $\pi_i + \bar{\pi}_i = \id$, so the two operators are
+complementary projections. Since $\pi_i = \id + \bar{\pi}_i$,
+expanding a product of Demazure operators yields:
+\[
+  \kappa_\alpha = \sum_{\beta \leq \alpha} A_\beta
+\]
+where the \emph{Demazure atoms}
+$A_\alpha = \bar{\pi}_{i_1} \circ \cdots \circ
+\bar{\pi}_{i_k}[x^\lambda]$ are obtained by using
+$\bar{\pi}$ at every step. This decomposition is the direct
+analogue of the expansion $P_\lambda(X) = \sum_{\nu \subseteq
+\lambda} \square_{\lambda\nu}\, s_\nu(X)$ in
+\S\ref{sec:symmetric}, where the Schur expansion coefficients
+arise from the ``identity vs.\ umbral'' choice at each step.
+
+% ------------------------------------------------------------------
+\section{What breaks: three structural obstructions}
+% ------------------------------------------------------------------
+
+% ------------------------------------------------------------------
+\subsection{The coproduct does not lift}\label{sec:coproduct}
+% ------------------------------------------------------------------
+
+The coproduct $\Delta f(X) = f(X + X')$ on $\Lambda$, given by
+plethystic addition of alphabets, is the engine of the classical
+theory. It gives rise to the binomial-type identity
+$p_n(x + x') = \sum \binom{n}{k} p_k\, p_{n-k}$ and its symmetric
+function generalization
+$P_\lambda(X + X') = \sum c^\lambda_{\mu\nu} P_\mu P_\nu$.
+
+The polynomial ring $\Z[x_1, \dots, x_n]$ has variable-wise
+addition $\Delta p(x) = p(x_1 + y_1, \dots, x_n + y_n)$, but
+Schubert polynomials do \emph{not} satisfy a binomial-type property
+under this coproduct. That is, there is no identity of the form:
+\[
+  \mathfrak{S}_w(x + y) = \sum_{u,v} c^w_{uv}\, \mathfrak{S}_u(x)\,
+  \mathfrak{S}_v(y).
+\]
+The ``Cauchy identity'' for Schubert polynomials is instead a
+\emph{finite product}:
+\[
+  \prod_{i + j \leq n+1} (x_i + y_j) = \sum_{w \in \fS_n}
+  \mathfrak{S}_w(x)\, \mathfrak{S}_{w_0 w}(y)
+\]
+which represents the class of a point in the cohomology ring
+$H^*(\mathrm{Fl}(n) \times \mathrm{Fl}(n))$. This is Poincar\'e
+duality, not a Cauchy kernel --- it is a polynomial, not a formal
+power series.
+
+\begin{remark}
+  The theory of \emph{back-stable Schubert polynomials}
+  (Lam--Lee--Shimozono \cite{LLS}) embeds Schubert polynomials into
+  a larger ring that \emph{does} have a good coproduct, partially
+  recovering the coalgebra structure. This may be the right setting
+  for a full divided-difference umbral calculus.
+\end{remark}
+
+% ------------------------------------------------------------------
+\subsection{The operator algebra is noncommutative}
+% ------------------------------------------------------------------
+
+The umbral operator $U_f = \sum x^n/n!\; \cL f^n(\cD)$ relies on
+$\cD$ generating a commutative algebra $\Q[\cD]$. The delta series
+$f(y)$ and its compositional inverse $g(y)$ live in the group of
+invertible formal power series under composition --- the Jabotinsky
+(or Riordan) group, which is infinite-dimensional.
+
+The divided differences $\partial_1, \dots, \partial_{n-1}$ generate
+the nil-Coxeter algebra $\cN_n$, which is:
+\begin{itemize}
+  \item \textbf{noncommutative} (the braid relation is not
+    commutativity),
+  \item \textbf{finite-dimensional} ($\dim \cN_n = n!$, with basis
+    $\{\partial_w : w \in \fS_n\}$),
+  \item \textbf{nilpotent} ($\partial_i^2 = 0$).
+\end{itemize}
+
+The finiteness and noncommutativity mean that ``formal power series
+in $\partial$'' do not form a commutative ring, and compositional
+inversion of delta series has no direct analogue. The entire
+Jabotinsky group collapses to the automorphism group of $\cN_n$,
+which is finite.
+
+% ------------------------------------------------------------------
+\subsection{Lowering happens in multiple directions}
+% ------------------------------------------------------------------
+
+In $\Q[x]$, the operator $\cD$ lowers degree by~1 along a single
+axis. Taylor's formula
+$\mathcal{I} = \sum x^n/n!\; \cL \cD^n$ expresses the identity as
+a sum over $\N$.
+
+With divided differences, there are $n - 1$ operators
+$\partial_1, \dots, \partial_{n-1}$, each lowering degree by~1
+but in a different root direction. The Taylor formula becomes the
+\emph{Schubert expansion}:
+\[
+  f = \sum_{w \in \fS_n} \partial_w(f)\big|_{x = 0} \cdot
+  \mathfrak{S}_w(x)
+\]
+which is a sum over the symmetric group $\fS_n$ rather than over
+$\N$. The multi-directionality is intrinsic to the theory and
+cannot be reduced to a single operator.
+
+% ------------------------------------------------------------------
+\section{What replaces the broken parts}
+% ------------------------------------------------------------------
+
+% ------------------------------------------------------------------
+\subsection{The Hecke parameter replaces delta series}
+% ------------------------------------------------------------------
+
+In the classical theory, the parametric family of umbral operators
+is indexed by delta series $f(y)$ --- an infinite-dimensional space.
+In the divided difference setting, the natural deformation is the
+Hecke algebra $\cH_n(t)$, which replaces the symmetric group
+relation $s_i^2 = 1$ with \eqref{eq:hecke}.
+
+As shown in Remark~\ref{rmk:0hecke}, $t = 0$ gives the 0-Hecke
+algebra (the algebra of Demazure operators, with key polynomials
+and atoms), while $t = 1$ recovers the symmetric group (with Schur
+polynomials). At generic $t$, the Demazure--Lusztig operators
+generate Hall--Littlewood polynomials.
+
+To obtain the full Macdonald polynomials, one needs the second
+parameter $q$, which arises from the \emph{double affine Hecke
+algebra} (see \S\ref{sec:DAHA} below).
+
+\begin{remark}
+  The collapse from an infinite-dimensional parameter space (delta
+  series) to a two-dimensional one (Macdonald's $(q,t)$) reflects
+  the collapse from $\Q[\cD] \cong \Q[[y]]$
+  (infinite-dimensional) to the finite-dimensional operator
+  algebras generated by divided differences. The braid group
+  algebra admits only finitely many interesting quotients, so only
+  finitely many deformation parameters survive.
+\end{remark}
+
+% ------------------------------------------------------------------
+\subsection{The DAHA and Cherednik operators}\label{sec:DAHA}
+% ------------------------------------------------------------------
+
+The single Hecke parameter $t$ gives Hall--Littlewood polynomials.
+To obtain the full Macdonald polynomials $P_\lambda(x; q, t)$, one
+needs the \emph{double affine Hecke algebra} (DAHA), introduced by
+Cherednik \cite{Cherednik}. The DAHA $\DAHA_n(q,t)$ is generated by
+three families of operators:
+\begin{itemize}
+  \item $T_1, \dots, T_{n-1}$ (Hecke generators, parameter $t$),
+  \item $x_1, \dots, x_n$ (polynomial multiplication),
+  \item $Y_1, \dots, Y_n$ (Cherednik operators),
+\end{itemize}
+subject to the cross-relations:
+\begin{align}
+  T_i\, x_i\, T_i &= t\, x_{i+1}, \label{eq:daha-x} \\
+  T_i\, Y_i\, T_i &= Y_{i+1}. \label{eq:daha-y}
+\end{align}
+The Cherednik operators commute:
+\begin{equation}\label{eq:cherednik-commute}
+  Y_i\, Y_j = Y_j\, Y_i \qquad \text{for all } i, j.
+\end{equation}
+
+The \emph{nonsymmetric Macdonald polynomials}
+$E_\alpha(x; q, t)$ are the simultaneous eigenfunctions of the
+Cherednik operators:
+\[
+  Y_i\, E_\alpha = \xi_i(\alpha; q, t) \cdot E_\alpha
+\]
+where $\xi_i(\alpha; q, t)$ are explicit eigenvalues depending on
+the composition $\alpha$ and the parameters.
+
+\subsubsection{The Cherednik operators as umbral operators}
+
+In \cite{Langer}, the umbral operator $U_f$ is characterized by the
+intertwining property:
+\[
+  \cD \circ U_f = U_f \circ g(\cD).
+\]
+This says that $U_f$ \emph{conjugates} the derivative into a new
+operator $g(\cD)$. The Cherednik operators satisfy an analogous
+intertwining relation \eqref{eq:daha-y}: the Hecke generator $T_i$
+permutes the Cherednik operators, just as $U_f$ transforms the
+derivative.
+
+More precisely, the analogy is:
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright}p{5.5cm}
+  >{\raggedright\arraybackslash}p{5.5cm}}
+\toprule
+\textbf{Umbral calculus on $\Lambda$} &
+\textbf{DAHA} \\
+\midrule
+Umbral operator $U_f$ &
+Cherednik operator $Y_i$ \\[3pt]
+$\cD \circ U_f = U_f \circ g(\cD)$ &
+$T_i\, Y_i\, T_i = Y_{i+1}$ \\[3pt]
+Delta series $f(y)$ &
+Parameters $(q, t)$ \\[3pt]
+Jabotinsky group ($\infty$-dim) &
+Two parameters \\[3pt]
+$U_f[s_\lambda] = P_\lambda$ &
+$Y_i\, E_\alpha = \xi_i \cdot E_\alpha$ \\[3pt]
+$\Omega(XY) = \sum P_\lambda Q_\lambda$ &
+Macdonald Cauchy identity \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Intertwining operators as column operators}
+
+The closest analogue of the column operators
+$C_f(z) = U_f \circ C(z) \circ U_g$ from \cite{Langer} is the
+family of \emph{Knop--Sahi intertwining operators} $\phi_i$ in the
+DAHA \cite{Knop,Sahi}. These satisfy:
+\begin{equation}\label{eq:intertwine}
+  Y_i\, \phi_i = \phi_i\, Y_{i+1}
+\end{equation}
+and build up the Macdonald polynomials step by step:
+\[
+  E_{s_i \cdot \alpha} \propto \phi_i(E_\alpha)
+\]
+starting from a ``base'' polynomial. This is directly analogous to
+the column operator construction
+\[
+  s_\lambda(X) = C_{\lambda'_1} \circ C_{\lambda'_2} \circ \cdots
+  \circ C_{\lambda'_m}[1]
+\]
+from \cite[Prop.~1.4]{Langer}: the intertwining operators are the
+``generalized column operators'' of the Hecke world.
+
+\subsubsection{The Macdonald involution as compositional inverse}
+
+In \cite{Langer}, the umbral operator $U_f$ and its adjoint
+$U_g^*$ are related by the compositional inverse $g = f^{-1}$:
+the LR-type basis $P_\lambda = U_f[s_\lambda]$ has dual
+$Q_\lambda = U_g^*[s_\lambda]$, and the duality is controlled by
+$f \leftrightarrow g$.
+
+In the Macdonald setting, the analogous duality is the
+\emph{Macdonald involution}: the symmetry that sends
+$P_\lambda(x; q, t)$ to $Q_\lambda(x; q, t)$. This involution
+involves interchanging the roles of the two parameters (roughly
+$q \leftrightarrow t^{-1}$, up to normalizations). The
+compositional inverse $g = f^{-1}$ of the delta series --- which
+drives the entire duality theory in \cite{Langer} --- becomes the
+$(q, t)$-duality of Macdonald polynomials.
+
+% ------------------------------------------------------------------
+\subsection{The nilHecke algebra replaces the operator algebra}
+% ------------------------------------------------------------------
+
+The \emph{nilHecke algebra} $\NH_n$ is the smash product
+$\Z[x_1, \dots, x_n] \rtimes \cN_n$, with the cross-relation:
+\begin{equation}\label{eq:nilhecke}
+  \partial_i\, x_i = 1 + x_{i+1}\, \partial_i.
+\end{equation}
+This is the divided-difference Leibniz rule, and it plays the role
+of the commutation relation
+$\cD \circ U_f = U_f \circ g(\cD)$ from
+\cite[Prop.~1.2]{Langer}. The nilHecke algebra is the single
+algebra in which both ``multiplication'' ($\cP$) and
+``translation'' ($\cT$) operators naturally live.
+
+\begin{remark}
+  In the symmetric function setting, the translation and
+  multiplication operators satisfy the commutation relation
+  (Lemma~1.1 of \cite{Langer}):
+  \[
+    \cT(v)\, \cP(w) = \Omega(vw)\, \cP(w)\, \cT(v).
+  \]
+  The nilHecke relation \eqref{eq:nilhecke} is the pointwise,
+  operator-level version of this: $\partial_i$ (a single step of
+  translation) and $x_i$ (multiplication by a single variable)
+  do not commute, and their commutator is controlled by $s_i$.
+\end{remark}
+
+% ------------------------------------------------------------------
+\subsection{The Yang--Baxter equation replaces the binomial theorem}
+% ------------------------------------------------------------------
+
+The binomial-type identity
+$p_n(x + x') = \sum \binom{n}{k} p_k(x)\, p_{n-k}(x')$ is the
+defining property of sequences of binomial type. In the divided
+difference setting, the structural identity that replaces it is the
+\emph{Yang--Baxter equation}.
+
+Following Fomin and Kirillov \cite{FK}, define the
+\emph{Yang--Baxter exponential} in the nil-Coxeter algebra:
+\[
+  \mathfrak{E}(z) = \prod_{i} (1 + z\, u_i)
+\]
+where $u_i$ are the nil-Coxeter generators. This satisfies:
+\[
+  (1 + z\, u_i)(1 + z\, u_{i+1})(1 + z\, u_i)
+  = (1 + z\, u_{i+1})(1 + z\, u_i)(1 + z\, u_{i+1}).
+\]
+
+The Yang--Baxter equation is the ``binomial theorem'' for divided
+differences: it governs how the exponential factors when the
+``alphabet'' is split. Just as the binomial theorem for $p_n$ is
+equivalent to $\Delta p_n = \sum \binom{n}{k} p_k \otimes p_{n-k}$
+being a coalgebra map, the Yang--Baxter equation is equivalent to a
+\emph{quasi-triangularity} condition on the nil-Coxeter algebra.
+
+% ------------------------------------------------------------------
+\subsection{Poincar\'e duality replaces the Cauchy kernel}
+% ------------------------------------------------------------------
+
+The Cauchy kernel
+$\Omega(XY) = \prod 1/(1-xy) = \sum_\lambda P_\lambda(X)\, Q_\lambda(Y)$
+characterizes dual bases in $\Lambda$ with respect to the Hall inner
+product. In the divided difference setting, the ``Cauchy identity''
+is the finite product:
+\[
+  \prod_{i + j \leq n+1} (x_i + y_j) = \sum_{w \in \fS_n}
+  \mathfrak{S}_w(x)\, \mathfrak{S}_{w_0 w}(y).
+\]
+The dual of $\mathfrak{S}_w$ is $\mathfrak{S}_{w_0 w}$, where
+$\ell(w) + \ell(w_0 w) = \ell(w_0) = \binom{n}{2}$, reflecting
+Poincar\'e duality on the flag variety $\mathrm{Fl}(n)$.
+
+\medskip
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright}p{5cm}
+  >{\raggedright\arraybackslash}p{6cm}}
+\toprule
+\textbf{Symmetric functions} & \textbf{Schubert calculus} \\
+\midrule
+$\mathrm{Rep}(GL_n)$ & $H^*(\mathrm{Fl}(n))$ \\
+Cauchy kernel (power series) & finite product (polynomial) \\
+$s_\lambda$ self-dual & $\mathfrak{S}_{w_0 w}$ dual to
+  $\mathfrak{S}_w$ \\
+$\sum_\lambda s_\lambda s_\lambda = \Omega$ &
+  $\sum_w \mathfrak{S}_w \mathfrak{S}_{w_0 w} = \prod(x_i + y_j)$ \\
+LR coefficients & Schubert structure constants \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ------------------------------------------------------------------
+\section{Key polynomials and Demazure atoms as an LR-type pair}
+% ------------------------------------------------------------------
+
+The Cauchy identity for key polynomials and Demazure atoms is:
+\[
+  \prod_{i,j=1}^{n} \frac{1}{1 - x_i y_j} = \sum_{\alpha \in
+  \Comp_n} \kappa_\alpha(x_1, \dots, x_n) \cdot
+  A_{w_0 \cdot \alpha}(y_1, \dots, y_n)
+\]
+where $w_0 \cdot \alpha$ reverses the composition. This is the
+closest analogue of the symmetric function identity
+$\sum_\lambda P_\lambda(X)\, Q_\lambda(Y) = \Omega(XY)$ from
+\cite{Langer}: the key polynomials play the role of $P_\lambda$
+and the Demazure atoms play the role of $Q_\lambda$.
+
+The decomposition
+$\kappa_\alpha = \sum_{\beta \leq \alpha} A_\beta$
+is upper-triangular, making key polynomials and atoms dual bases
+--- exactly as the Littlewood--Richardson type bases $P_\lambda$
+and their duals $Q_\lambda$ are related by an upper-triangular
+change of basis from the Schur functions.
+
+% ------------------------------------------------------------------
+\section{The collapse of parametric freedom}
+% ------------------------------------------------------------------
+
+\begin{question}
+  In the classical umbral calculus, the Jabotinsky group of delta
+  series parametrizes all sequences of binomial type. What is
+  the ``Jabotinsky group'' for divided differences?
+\end{question}
+
+The answer appears to be: \emph{essentially trivial}. The
+automorphism group of the nil-Coxeter algebra $\cN_n$ is generated
+by the diagram automorphisms of the Dynkin diagram $A_{n-1}$ (i.e.,
+the map $\partial_i \mapsto \partial_{n-i}$, corresponding to
+$w \mapsto w_0 w w_0$). This is a finite group, in stark contrast
+to the infinite-dimensional Jabotinsky group.
+
+The Hecke deformation $s_i^2 = 1 \;\rightsquigarrow\; T_i^2
+= (t-1)T_i + t$ provides a one-parameter family, and the
+DAHA (\S\ref{sec:DAHA}) extends this to the two-parameter
+Macdonald $(q,t)$-family. But these are \emph{finitely many}
+parameters, not the infinite-dimensional family of delta series.
+
+\begin{conjecture}
+  The Macdonald $(q,t)$-parameters exhaust the deformation freedom
+  available when the derivative is replaced by divided differences
+  in the umbral calculus. More precisely, any ``divided-difference
+  umbral operator'' that produces a basis of $\Z[x_1, \dots, x_n]$
+  with Littlewood--Richardson type structure constants is
+  equivalent, up to automorphisms of $\cN_n$, to a specialization
+  of the Macdonald construction.
+\end{conjecture}
+
+% ------------------------------------------------------------------
+\section{Directions}
+% ------------------------------------------------------------------
+
+\begin{enumerate}
+  \item \textbf{Back-stable Schubert polynomials.} The work of
+    Lam--Lee--Shimozono \cite{LLS} embeds Schubert polynomials into
+    a ring with a good coproduct. Does this restore enough coalgebra
+    structure to support a full umbral calculus?
+
+  \item \textbf{Noncommutative symmetric functions.} The theory of
+    Gelfand--Krob--Lascoux--Leclerc--Thibon--Retakh \cite{GKLLTR}
+    provides a Hopf algebra of noncommutative symmetric functions
+    with divided differences built in. Is this the ``right'' home
+    for the divided-difference umbral calculus?
+
+  \item \textbf{The nilHecke algebra as a bialgebra.} The nilHecke
+    algebra $\NH_n$ has both a product (algebra structure) and a
+    coproduct (induced from the inclusion
+    $\fS_m \times \fS_k \hookrightarrow \fS_{m+k}$). Does the
+    resulting bialgebra structure support a notion of
+    ``binomial type''?
+
+  \item \textbf{Elliptic deformations.} Beyond the Hecke parameter
+    $q$ and the Macdonald parameters $(q,t)$, elliptic
+    deformations (Ruijsenaars, Rains) provide further parameters.
+    Are these additional ``delta series'' in the divided-difference
+    setting?
+
+  \item \textbf{Categorification.} The nilHecke algebra
+    categorifies the quantum group $U_q(\mathfrak{sl}_n)$ via
+    Khovanov--Lauda--Rouquier algebras. Does the umbral calculus
+    have a categorical shadow?
+\end{enumerate}
+
+% ------------------------------------------------------------------
+% References
+% ------------------------------------------------------------------
+
+\begin{thebibliography}{99}
+
+\bibitem{Cherednik}
+I.~Cherednik,
+\emph{Double affine Hecke algebras},
+London Math.\ Soc.\ Lecture Note Series \textbf{319},
+Cambridge University Press, 2005.
+
+\bibitem{FK}
+S.~Fomin and A.~N.~Kirillov,
+\emph{The Yang--Baxter equation, symmetric functions, and Schubert
+  polynomials},
+Discrete Math. \textbf{153} (1996), 123--143.
+
+\bibitem{GKLLTR}
+I.~M.~Gelfand, D.~Krob, A.~Lascoux, B.~Leclerc, V.~Retakh, and
+J.-Y.~Thibon,
+\emph{Noncommutative symmetric functions},
+Adv.\ Math. \textbf{112} (1995), 218--348.
+
+\bibitem{Knop}
+F.~Knop,
+\emph{Integrality of two variable Kostka functions},
+J.~Reine Angew.\ Math. \textbf{482} (1997), 177--189.
+
+\bibitem{Langer}
+R.~Langer,
+\emph{Symmetric functions and Macdonald polynomials},
+Masters thesis, University of Melbourne, 2008.
+
+\bibitem{LLS}
+T.~Lam, S.~J.~Lee, and M.~Shimozono,
+\emph{Back stable Schubert calculus},
+Compositio Math. \textbf{157} (2021), 883--962.
+
+\bibitem{Macdonald}
+I.~G.~Macdonald,
+\emph{Symmetric functions and Hall polynomials},
+2nd ed., Oxford University Press, 1995.
+
+\bibitem{Reiner-Shimozono}
+V.~Reiner and M.~Shimozono,
+\emph{Key polynomials and a flagged Littlewood--Richardson rule},
+J.~Combin.\ Theory Ser.~A \textbf{70} (1995), 107--143.
+
+\bibitem{Roman}
+S.~Roman,
+\emph{The Umbral Calculus},
+Academic Press, 1984.
+
+\bibitem{Rota}
+G.-C.~Rota,
+\emph{Finite operator calculus},
+Academic Press, 1975.
+
+\bibitem{Sahi}
+S.~Sahi,
+\emph{Interpolation, integrality, and a generalization of
+  Macdonald's polynomials},
+Internat.\ Math.\ Res.\ Notices \textbf{1996}, no.~10, 457--471.
+
+\end{thebibliography}
+
+\end{document}
